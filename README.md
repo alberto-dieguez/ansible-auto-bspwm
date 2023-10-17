@@ -1,7 +1,5 @@
 # auto-bspwm
-> This is a Bash script that automates the setup of a professional hacking environment for Kali Linux using the tiled window manager [bspwm](https://github.com/baskerville/bspwm).
-
-ansible-playbook -i hosts playbook.yml --ask-become-pass
+> This is an ansible script that automates the setup of a professional hacking environment for Kali Linux using the tiled window manager [bspwm](https://github.com/baskerville/bspwm).
 
 ## Installation
 1. Install available updates.
@@ -14,16 +12,15 @@ sudo apt upgrade -y
 2. Clone the repository and navigate to it.
 
 ```shell
-git clone https://github.com/r1vs3c/auto-bspwm.git
-cd auto-bspwm
+git clone https://github.com/alberto-dieguez/ansible-auto-bspwm.git
+cd ansible-auto-bspwm
 ```
 
 3. Execute the script.
 
 ```shell
-./setup.sh
+ansible-playbook -i hosts playbook.yml --ask-become-pass
 ```
-
 4. After the script has finished, you will be prompted to restart the system. Once you have rebooted, select `bspwm` as the window manager and then log in.
    
 5. Execute `nvim.sh` to install nvim and nvchad.
