@@ -1,0 +1,217 @@
+
+---
+- name: Install environment
+  hosts: local
+  connection: local
+  vars:
+    user: "{{ lookup('env', 'USER') }}"
+    dir: "{{ playbook_dir }}"
+    fdir: "$HOME/.local/share/fonts"
+  tasks:
+  - name: banner
+    debug:
+      msg: "Environment by @ch1od0, thx to @r1vs3c and @s4vitar."
+
+  - name: Installing necessary packages for the environment...
+    become: true
+    apt:
+      name: 
+        - kitty
+        - rofi
+        - feh
+        - xclip
+        - ranger
+        - i3lock-fancy
+        - scrot
+        - scrub
+        - wmname
+        - firejail
+        - imagemagick
+        - cmatrix
+        - htop
+        - neofetch
+        - python3-pip
+        - procps
+        - tty-clock
+        - fzf
+        - lsd
+        - bat
+        - pamixer
+        - flameshot
+      state: present
+
+  - name: Installing necessary dependencies for bspwm...
+    become: true
+    apt:
+      name: 
+        - build-essential
+        - git
+        - vim
+        - libxcb-util0-dev
+        - libxcb-ewmh-dev
+        - libxcb-randr0-dev
+        - libxcb-icccm4-dev
+        - libxcb-keysyms1-dev
+        - libxcb-xinerama0-dev
+        - libasound2-dev
+        - libxcb-xtest0-dev
+        - libxcb-shape0-dev
+        - libuv1-dev
+      state: present
+
+  - name: Installing necessary dependencies for polybar...
+    become: true
+    apt:
+      name: 
+        - cmake
+        - cmake-data
+        - pkg-config
+        - python3-sphinx
+        - libcairo2-dev
+        - libxcb1-dev
+        - libxcb-util0-dev
+        - libxcb-randr0-dev
+        - libxcb-composite0-dev
+        - python3-xcbgen
+        - xcb-proto
+        - libxcb-image0-dev
+        - libxcb-ewmh-dev
+        - libxcb-icccm4-dev
+        - libxcb-xkb-dev
+        - libxcb-xrm-dev
+        - libxcb-cursor-dev
+        - libasound2-dev
+        - libpulse-dev
+        - libjsoncpp-dev
+        - libmpdclient-dev
+        - libcurl4-openssl-dev
+        - libnl-genl-3-dev
+      state: present
+
+  - name: Installing necessary dependencies for picom...
+    become: true
+    apt:
+      name: 
+        - meson
+        - libxext-dev
+        - libxcb1-dev
+        - libxcb-damage0-dev
+        - libxcb-xfixes0-dev
+        - libxcb-shape0-dev
+        - libxcb-render-util0-dev
+        - libxcb-render0-dev
+        - libxcb-randr0-dev
+        - libxcb-composite0-dev
+        - libxcb-image0-dev
+        - libxcb-present-dev
+        - libxcb-xinerama0-dev
+        - libpixman-1-dev
+        - libdbus-1-dev
+        - libconfig-dev
+        - libgl1-mesa-dev
+        - libpcre2-dev
+        - libpcre3-dev
+        - libevdev-dev
+        - uthash-dev
+        - libev-dev
+        - libx11-xcb-dev
+        - libxcb-glx0-dev
+      state: present
+
+  - name: Cloning bspwm and sxhkd repositories
+    git:
+      repo: https://github.com/baskerville/{{ item }}.git
+      dest: "{{ dir }}/tools/{{ item }}"
+    loop:
+      - bspwm
+      - sxhkd
+
+  - name: Cloning polybar
+    git:
+      repo: https://github.com/polybar/polybar
+      dest: "{{ dir }}/tools/polybar"
+
+  - name: Cloning picom
+    git:
+      repo: https://github.com/ibhagwan/picom.git
+      dest: "{{ dir }}/tools/picom"
+
+  - name: Installing bspwm...
+    shell: 
+      cmd: make -j$(nproc) && sudo make install && sudo apt install bspwm -y
+      chdir: "{{ dir }}/tools/bspwm"
+
+  - name: Installing sxhkd...
+    shell: 
+      cmd: make -j$(nproc) && sudo make install
+      chdir: "{{ dir }}/tools/sxhkd"
+
+  - name: Installing polybar...
+    shell: 
+      cmd: mkdir build && cd build && cmake .. && make -j$(nproc) && sudo make install
+      chdir: "{{ dir }}/tools/polybar"
+
+  - name: Installing picom...
+    shell: 
+      cmd: git submodule update --init --recursive && meson --buildtype=release . build && ninja -C build && sudo ninja -C build install
+      chdir: "{{ dir }}/tools/picom"
+
+  - name: Installing Powerlevel10k for user {{ user }}...
+    shell: 
+      cmd: git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
+      chdir: "{{ dir }}"
+
+  - name: Installing Powerlevel10k for user root...
+    become: true
+    shell: 
+      cmd: sudo git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /root/powerlevel10k
+      chdir: "{{ dir }}"
+
+  - name: Installing fzf for {{ user }} and user root...
+    shell: 
+      cmd: 	git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf &&	~/.fzf/install --all && sudo git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && sudo ~/.fzf/install --all
+      chdir: "{{ dir }}"
+
+  - name: Installing fzf for $user and user root...
+    shell: 
+      cmd: 	git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf &&	~/.fzf/install --all && sudo git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && sudo ~/.fzf/install --all
+      chdir: "{{ dir }}"
+
+  - name: Configuring fonts...
+    copy:
+      src: "{{ dir }}/fonts/*"
+      dest: "{{ fdir }}"
+
+  - name: Configuring wallpaper...
+    copy:
+      src: "{{ dir }}/wallpapers/*"
+      dest: "~/Wallpapers"
+
+  - name: Configuring configuration files...
+    copy:
+      src: "{{ dir }}/config/*"
+      dest: "~/.config/"
+
+  - name: Configuring the .zshrc and .p10k.zsh files...
+    shell:
+      cmd: cp -v .zshrc ~/.zshrc && sudo ln -sfv ~/.zshrc /root/.zshrc && cp -v .p10k.zsh ~ && sudo cp -v root/.p10k.zsh /root/ && sudo mkdir -p /usr/share/zsh-sudo/ && sudo cp -v sudo.plugin.zsh /usr/share/zsh-sudo/
+      chdir: "{{ dir }}"
+
+  - name: Configuring scripts...
+    shell:
+      cmd: sudo cp -v scripts/whichSystem.py /usr/local/bin/ && cp -rv scripts/*.sh ~/.config/polybar/shapes/scripts/ && touch ~/.config/polybar/shapes/scripts/target && ~/.config/polybar/shapes/scripts/./colors-dark.sh --teal
+      chdir: "{{ dir }}"
+
+  - name: Configuring necessary permissions and symbolic links...
+    shell:
+      cmd: chmod -R +x ~/.config/bspwm/ && chmod +x ~/.config/polybar/launch.sh && chmod +x ~/.config/polybar/shapes/scripts/* && sudo chmod +x /usr/local/bin/whichSystem.py && sudo chmod +x /usr/local/bin/screenshot && sudo chmod +x /usr/local/share/zsh/site-functions/_bspc && sudo chown root:root /usr/local/share/zsh/site-functions/_bspc && sudo mkdir -p /root/.config/polybar/shapes/scripts/ && sudo touch /root/.config/polybar/shapes/scripts/target && sudo ln -sfv ~/.config/polybar/shapes/scripts/target /root/.config/polybar/shapes/scripts/target
+      chdir: "{{ dir }}"
+
+  - name: Fix time zone...
+    shell:
+      cmd: sudo timedatectl set-timezone Europe/Madrid
+      chdir: "{{ dir }}"
+
+
+
+
