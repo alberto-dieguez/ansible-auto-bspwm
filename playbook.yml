@@ -1,4 +1,3 @@
-
 ---
 - name: Install environment
   hosts: local
@@ -169,32 +168,32 @@
 
   - name: Installing fzf for {{ user }} and user root...
     shell: 
-      cmd: 	git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf &&	~/.fzf/install --all && sudo git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && sudo ~/.fzf/install --all
-      chdir: "{{ dir }}"
-
-  - name: Installing fzf for $user and user root...
-    shell: 
-      cmd: 	git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf &&	~/.fzf/install --all && sudo git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && sudo ~/.fzf/install --all
+      cmd: 	git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf &&	~/.fzf/install --all && sudo git clone --depth 1 https://github.com/junegunn/fzf.git /root/.fzf && sudo /root/.fzf/install --all
       chdir: "{{ dir }}"
 
   - name: Configuring fonts...
-    copy:
-      src: "{{ dir }}/fonts/*"
-      dest: "{{ fdir }}"
+    shell:
+      cmd: mkdir -p {{ fdir }} && cp -rv {{ dir }}/fonts/* {{ fdir }}
+      chdir: "{{ dir }}"
 
   - name: Configuring wallpaper...
-    copy:
-      src: "{{ dir }}/wallpapers/*"
-      dest: "~/Wallpapers"
+    shell:
+      cmd: mkdir ~/Wallpapers && cp -rv  {{ dir }}/wallpapers/* ~/Wallpapers
+      chdir: "{{ dir }}"
 
   - name: Configuring configuration files...
-    copy:
-      src: "{{ dir }}/config/*"
-      dest: "~/.config/"
+    shell:
+      cmd: cp -rv {{ dir }}/config/* ~/.config/
+      chdir: "{{ dir }}"
 
   - name: Configuring the .zshrc and .p10k.zsh files...
     shell:
       cmd: cp -v .zshrc ~/.zshrc && sudo ln -sfv ~/.zshrc /root/.zshrc && cp -v .p10k.zsh ~ && sudo cp -v root/.p10k.zsh /root/ && sudo mkdir -p /usr/share/zsh-sudo/ && sudo cp -v sudo.plugin.zsh /usr/share/zsh-sudo/
+      chdir: "{{ dir }}"
+
+  - name: Run polybar
+    shell:
+      cmd: polybar &
       chdir: "{{ dir }}"
 
   - name: Configuring scripts...
@@ -204,7 +203,7 @@
 
   - name: Configuring necessary permissions and symbolic links...
     shell:
-      cmd: chmod -R +x ~/.config/bspwm/ && chmod +x ~/.config/polybar/launch.sh && chmod +x ~/.config/polybar/shapes/scripts/* && sudo chmod +x /usr/local/bin/whichSystem.py && sudo chmod +x /usr/local/bin/screenshot && sudo chmod +x /usr/local/share/zsh/site-functions/_bspc && sudo chown root:root /usr/local/share/zsh/site-functions/_bspc && sudo mkdir -p /root/.config/polybar/shapes/scripts/ && sudo touch /root/.config/polybar/shapes/scripts/target && sudo ln -sfv ~/.config/polybar/shapes/scripts/target /root/.config/polybar/shapes/scripts/target
+      cmd: chmod -R +x ~/.config/bspwm/ && chmod +x ~/.config/polybar/launch.sh && chmod +x ~/.config/polybar/shapes/scripts/* && sudo chmod +x /usr/local/bin/whichSystem.py && sudo chmod +x /usr/local/share/zsh/site-functions/_bspc && sudo chown root:root /usr/local/share/zsh/site-functions/_bspc && sudo mkdir -p /root/.config/polybar/shapes/scripts/ && sudo touch /root/.config/polybar/shapes/scripts/target && sudo ln -sfv ~/.config/polybar/shapes/scripts/target /root/.config/polybar/shapes/scripts/target
       chdir: "{{ dir }}"
 
   - name: Fix time zone...

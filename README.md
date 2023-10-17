@@ -1,7 +1,7 @@
 # auto-bspwm
 > This is a Bash script that automates the setup of a professional hacking environment for Kali Linux using the tiled window manager [bspwm](https://github.com/baskerville/bspwm).
 
-ansible-playbook -i hosts ping.yml --ask-become-pass
+ansible-playbook -i hosts playbook.yml --ask-become-pass
 
 ## Installation
 1. Install available updates.
