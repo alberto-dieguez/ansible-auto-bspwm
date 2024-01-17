@@ -47,7 +47,7 @@ else
       sudo rm $dir/nvim-linux64.tar.gz
       sudo rm -rf $dir/nvim-linux64
       sleep 2
-      git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1 && nvim
+      git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1 && /opt/nvim-linux64/bin/nvim
       if [ $? != 0 ] && [ $? != 130 ]; then
               echo -e "\n${redColour}[-] Error installing the packages.\n${endColour}"
               exit 1
