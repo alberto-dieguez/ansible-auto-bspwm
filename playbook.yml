@@ -13,7 +13,7 @@
 
   - name: Installing firejail...
     shell:
-      cmd: sudo git clone https://github.com/netblue30/firejail.git && cd firejail && ./configure && make && sudo make install-strip
+      cmd: sudo git clone https://github.com/netblue30/firejail.git && cd firejail && sudo ./configure && sudo make && sudo make install-strip
       chdir: "{{ dir }}"
 
   - name: Installing necessary packages for the environment...
