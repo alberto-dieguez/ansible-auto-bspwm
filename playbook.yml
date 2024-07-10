@@ -11,6 +11,11 @@
     debug:
       msg: "Environment by @ch1od0, thx to @r1vs3c and @s4vitar."
 
+  - name: Installing firejail...
+    shell:
+      cmd: sudo git clone https://github.com/netblue30/firejail.git && cd firejail && ./configure && make && sudo make install-strip
+      chdir: "{{ dir }}"
+
   - name: Installing necessary packages for the environment...
     become: true
     apt:
@@ -24,7 +29,6 @@
         - scrot
         - scrub
         - wmname
-        - firejail
         - imagemagick
         - cmatrix
         - htop
