@@ -47,7 +47,7 @@ else
       sudo rm $dir/nvim-linux64.tar.gz
       sudo rm -rf $dir/nvim-linux64
       sleep 2
-      git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1 && /opt/nvim-linux64/bin/nvim
+      git clone https://github.com/NvChad/starter ~/.config/nvim --depth 1 && /opt/nvim-linux64/bin/nvim
       if [ $? != 0 ] && [ $? != 130 ]; then
               echo -e "\n${redColour}[-] Error installing the packages.\n${endColour}"
               exit 1
@@ -57,7 +57,7 @@ else
       fi
       sleep 4
       echo -e "\n${purpleColour}[*] Installing neovim and nvchad for root...\n${endColour}"
-      sudo git clone https://github.com/NvChad/NvChad /root/.config/nvim --depth 1 && sudo /opt/nvim-linux64/bin/nvim
+      sudo git clone https://github.com/NvChad/starter /root/.config/nvim --depth 1 && sudo /opt/nvim-linux64/bin/nvim
       if [ $? != 0 ] && [ $? != 130 ]; then
               echo -e "\n${redColour}[-] Error installing the packages.\n${endColour}"
               exit 1
