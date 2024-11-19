@@ -90,3 +90,27 @@ This configuration uses the following software:
 ## Credits
 - This environment has been inspired by the functionalities of [S4vitar's](https://github.com/s4vitar) and Juan Rivas [r1vs3c](https://github.com/r1vs3c) environment.
 - Thanks to [Cube](https://github.com/ZLCube) for their contribution to the creation of the `archkali.png` wallpaper.
+
+
+## Change kali user from yours in ova kali
+
+sudo adduser <youruser>
+sudo usermod -aG sudo <youruser>
+sudo cp -r /home/kali/* /home/<youruser>/
+sudo chown -R <youruser>:<youruser> /home/<youruser>
+
+Close session and loggin with the new user
+
+sudo killall -u kali
+sudo deluser --remove-home kali
+
+## Install docker
+
+sudo apt update
+sudo apt install -y docker.io
+sudo systemctl enable docker --now
+sudo usermod -aG docker $USER
+groups $USER
+
+
+
