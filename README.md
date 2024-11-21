@@ -28,8 +28,8 @@ ansible-playbook -i hosts playbook.yml --ask-become-pass
 ## Keyboard shortcuts
 - <kbd>Windows</kbd> + <kbd>Enter</kbd>: Open a terminal emulator window (kitty).
 - <kbd>Windows</kbd> + <kbd>W</kbd>: Close the current window.
-- <kbd>Windows</kbd> + <kbd>Alt</kbd> + <kbd>R</kbd>: Restart the bspwm configuration.
-- <kbd>Windows</kbd> + <kbd>Alt</kbd> + <kbd>Q</kbd>: Log out.
+- <kbd>Windows</kbd> + <kbd>Ctrl</kbd> + <kbd>R</kbd>: Restart the bspwm configuration.
+- <kbd>Windows</kbd> + <kbd>Ctrl</kbd> + <kbd>Q</kbd>: Log out.
 - <kbd>Windows</kbd> + <kbd>(⬆⬅⬇➡)</kbd>: Navigate through windows in the current workspace.
 - <kbd>Windows</kbd> + <kbd>D</kbd>: Open Rofi. Press <kbd>Esc</kbd> to exit.
 - <kbd>Windows</kbd> + <kbd>(1,2,3,4,5,6,7,8,9,0)</kbd>: Switch to the respective workspace.
@@ -95,22 +95,35 @@ This configuration uses the following software:
 ## Change kali user from yours in ova kali
 
 sudo adduser <youruser>
+
 sudo usermod -aG sudo <youruser>
+
 sudo cp -r /home/kali/* /home/<youruser>/
+
 sudo chown -R <youruser>:<youruser> /home/<youruser>
+
 
 Close session and loggin with the new user
 
 sudo killall -u kali
+
 sudo deluser --remove-home kali
 
 ## Install docker
 
 sudo apt update
+
 sudo apt install -y docker.io
+
 sudo systemctl enable docker --now
+
 sudo usermod -aG docker $USER
+
 groups $USER
+
+## docker-compose
+
+sudo apt install docker-compose
 
 
 
