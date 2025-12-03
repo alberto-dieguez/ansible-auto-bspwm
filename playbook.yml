@@ -217,6 +217,14 @@
       cmd: cp -v .zshrc ~/.zshrc && cp -v .p10k.zsh ~
       chdir: "{{ dir }}"
 
+  - name: Copy alacritty theme
+    become: false
+    shell: |
+      mkdir /etc/xdg/alacritty/alacritty.toml
+      cp -rv {{ dir }}/alacritty.toml /etc/xdg/alacritty/alacritty.toml
+    args:
+      executable: /bin/bash
+
   - name: Configuring the .zshrc and .p10k.zsh files for root
     become: true
     shell:
