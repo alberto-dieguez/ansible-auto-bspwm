@@ -94,13 +94,13 @@ This configuration uses the following software:
 
 ## Change kali user from yours in ova kali
 
-sudo adduser <youruser>
+sudo adduser user
 
-sudo usermod -aG sudo <youruser>
+sudo usermod -aG sudo YOURUSER
 
-sudo cp -r /home/kali/* /home/<youruser>/
+sudo cp -r /home/kali/* /home/YOURUSER/
 
-sudo chown -R <youruser>:<youruser> /home/<youruser>
+sudo chown -R YOURUSER:YOURUSER /home/YOURUSER
 
 
 Close session and loggin with the new user
