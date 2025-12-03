@@ -38,16 +38,16 @@ else
       banner
       sleep 1
       echo -e "\n${purpleColour}[*] Installing neovim and nvchad...\n${endColour}"
-      wget https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.tar.gz
+      wget https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.tar.gz
       sleep 2
-      sudo tar -xf $dir/nvim-linux64.tar.gz
+      sudo tar -xf $dir/nvim-linux-x86_64.tar.gz
       sleep 2
-      sudo mv $dir/nvim-linux64 /opt
+      sudo mv $dir/nvim-linux-x86_64 /opt
       sleep 2
-      sudo rm $dir/nvim-linux64.tar.gz
-      sudo rm -rf $dir/nvim-linux64
+      sudo rm $dir/nvim-linux-x86_64.tar.gz
+      sudo rm -rf $dir/nvim-linux-x86_64
       sleep 2
-      git clone https://github.com/NvChad/starter ~/.config/nvim --depth 1 && /opt/nvim-linux64/bin/nvim
+      git clone https://github.com/NvChad/starter ~/.config/nvim --depth 1 && /opt/nvim-linux-x86_64/bin/nvim
       if [ $? != 0 ] && [ $? != 130 ]; then
               echo -e "\n${redColour}[-] Error installing the packages.\n${endColour}"
               exit 1
@@ -57,7 +57,7 @@ else
       fi
       sleep 4
       echo -e "\n${purpleColour}[*] Installing neovim and nvchad for root...\n${endColour}"
-      sudo git clone https://github.com/NvChad/starter /root/.config/nvim --depth 1 && sudo /opt/nvim-linux64/bin/nvim
+      sudo git clone https://github.com/NvChad/starter /root/.config/nvim --depth 1 && sudo /opt/nvim-linux-x86_64/bin/nvim
       if [ $? != 0 ] && [ $? != 130 ]; then
               echo -e "\n${redColour}[-] Error installing the packages.\n${endColour}"
               exit 1
