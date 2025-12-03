@@ -12,8 +12,9 @@
       msg: "Environment by @ch1od0, thx to @r1vs3c and @s4vitar."
 
   - name: Installing firejail...
+    became: true
     shell:
-      cmd: sudo git clone https://github.com/netblue30/firejail.git && cd firejail && sudo ./configure && sudo make && sudo make install-strip
+      cmd: git clone https://github.com/netblue30/firejail.git && cd firejail && ./configure && make && make install-strip
       chdir: "{{ dir }}"
 
   - name: Installing necessary packages for the environment...
@@ -32,7 +33,6 @@
         - imagemagick
         - cmatrix
         - htop
-        - neofetch
         - python3-pip
         - procps
         - tty-clock
@@ -43,6 +43,18 @@
         - flameshot
       state: present
 
+  - name: Clone neofetch
+    git:
+      repo: "https://github.com/dylanaraps/neofetch.git"
+      dest: "/opt/neofetch"
+      version: master
+
+  - name: Install neofetch script
+    copy:
+      src: "/opt/neofetch/neofetch"
+      dest: "/usr/local/bin/neofetch"
+      mode: "0755"
+      
   - name: Installing necessary dependencies for bspwm...
     become: true
     apt:
@@ -161,6 +173,7 @@
 
   - name: Installing Powerlevel10k for user {{ user }}...
     shell: 
+    became: false
       cmd: git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
       chdir: "{{ dir }}"
 
@@ -170,10 +183,17 @@
       cmd: sudo git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /root/powerlevel10k
       chdir: "{{ dir }}"
 
-  - name: Installing fzf for {{ user }} and user root...
-    shell: 
-      cmd: 	git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf &&	~/.fzf/install --all && sudo git clone --depth 1 https://github.com/junegunn/fzf.git /root/.fzf && sudo /root/.fzf/install --all
-      chdir: "{{ dir }}"
+  - name: Install fzf for {{ user }}
+    become: false
+    shell: |
+      git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+      ~/.fzf/install --all
+
+  - name: Install fzf for root
+    become: true
+    shell: |
+      git clone --depth 1 https://github.com/junegunn/fzf.git /root/.fzf
+      /root/.fzf/install --all
 
   - name: Configuring fonts...
     shell:
@@ -190,9 +210,16 @@
       cmd: cp -rv {{ dir }}/config/* ~/.config/
       chdir: "{{ dir }}"
 
-  - name: Configuring the .zshrc and .p10k.zsh files...
+  - name: Configuring the .zshrc and .p10k.zsh files for {{ user }}
+    become: false
     shell:
-      cmd: cp -v .zshrc ~/.zshrc && sudo ln -sfv ~/.zshrc /root/.zshrc && cp -v .p10k.zsh ~ && sudo cp -v root/.p10k.zsh /root/ && sudo mkdir -p /usr/share/zsh-sudo/ && sudo cp -v sudo.plugin.zsh /usr/share/zsh-sudo/
+      cmd: cp -v .zshrc ~/.zshrc && cp -v .p10k.zsh ~
+      chdir: "{{ dir }}"
+
+  - name: Configuring the .zshrc and .p10k.zsh files for root
+    become: true
+    shell:
+      cmd: ln -sfv /home/{{ user }}/.zshrc /root/.zshrc && cp -v root/.p10k.zsh /root/ && mkdir -p /usr/share/zsh-sudo/ && cp -v sudo.plugin.zsh /usr/share/zsh-sudo/
       chdir: "{{ dir }}"
 
   - name: Run polybar
@@ -200,19 +227,69 @@
       cmd: polybar &
       chdir: "{{ dir }}"
 
-  - name: Configuring scripts...
-    shell:
-      cmd: sudo cp -v scripts/whichSystem.py /usr/local/bin/ && cp -rv scripts/*.sh ~/.config/polybar/shapes/scripts/ && touch ~/.config/polybar/shapes/scripts/target && ~/.config/polybar/shapes/scripts/./colors-dark.sh --teal
-      chdir: "{{ dir }}"
+  - name: Install whichSystem.py
+    become: true
+    copy:
+      src: "{{ dir }}/scripts/whichSystem.py"
+      dest: /usr/local/bin/whichSystem.py
+      mode: '0755'
 
-  - name: Configuring necessary permissions and symbolic links...
-    shell:
-      cmd: chmod -R +x ~/.config/bspwm/ && chmod +x ~/.config/polybar/launch.sh && chmod +x ~/.config/polybar/shapes/scripts/* && sudo chmod +x /usr/local/bin/whichSystem.py && sudo chmod +x /usr/local/share/zsh/site-functions/_bspc && sudo chown root:root /usr/local/share/zsh/site-functions/_bspc && sudo mkdir -p /root/.config/polybar/shapes/scripts/ && sudo touch /root/.config/polybar/shapes/scripts/target && sudo ln -sfv ~/.config/polybar/shapes/scripts/target /root/.config/polybar/shapes/scripts/target
-      chdir: "{{ dir }}"
+  - name: Copy polybar scripts
+    become: false
+    shell: |
+      mkdir -p ~/.config/polybar/shapes/scripts/
+      cp -rv {{ dir }}/scripts/*.sh ~/.config/polybar/shapes/scripts/
+      touch ~/.config/polybar/shapes/scripts/target
+    args:
+      executable: /bin/bash
+
+  - name: Run colors-dark.sh
+    become: false
+    shell: |
+      ~/.config/polybar/shapes/scripts/colors-dark.sh --teal
+    args:
+      executable: /bin/bash
+
+  - name: Make bspwm config executable
+    shell: chmod -R +x ~/.config/bspwm/
+    become: false
+
+  - name: Make polybar launch.sh executable
+    shell: chmod +x ~/.config/polybar/launch.sh
+    become: false
+
+  - name: Make polybar scripts executable
+    shell: chmod +x ~/.config/polybar/shapes/scripts/*
+    become: false
+
+
+  - name: Make whichSystem.py executable
+    become: true
+    file:
+      path: /usr/local/bin/whichSystem.py
+      mode: '0755'
+
+  - name: Make _bspc executable and set ownership
+    become: true
+    shell: |
+      chmod +x /usr/local/share/zsh/site-functions/_bspc
+      chown root:root /usr/local/share/zsh/site-functions/_bspc
+    args:
+      executable: /bin/bash
+
+  - name: Prepare root polybar scripts folder
+    become: true
+    shell: |
+      mkdir -p /root/.config/polybar/shapes/scripts/
+      touch /root/.config/polybar/shapes/scripts/target
+      ln -sfv /home/{{ user }}/.config/polybar/shapes/scripts/target /root/.config/polybar/shapes/scripts/target
+    args:
+      executable: /bin/bash
 
   - name: Fix time zone...
+    became: true
     shell:
-      cmd: sudo timedatectl set-timezone Europe/Madrid
+      cmd: timedatectl set-timezone Europe/Madrid
       chdir: "{{ dir }}"
 
 
