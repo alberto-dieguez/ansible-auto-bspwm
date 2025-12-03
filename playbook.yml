@@ -21,6 +21,7 @@
     become: true
     apt:
       name: 
+        - alacritty
         - kitty
         - rofi
         - feh
