@@ -1,59 +1,66 @@
-# ~/.config/alacritty/alacritty.toml
 [colors.bright]
-black   = "0x414868"
-red     = "0xf7768e"
-green   = "0x9ece6a"
-yellow  = "0xe0af68"
-blue    = "0x7aa2f7"
+black = "0x414868"
+blue = "0x7aa2f7"
+cyan = "0x7dcfff"
+green = "0x9ece6a"
 magenta = "0xbb9af7"
-cyan    = "0x7dcfff"
-white   = "0xc0caf5"
+red = "0xf7768e"
+white = "0xc0caf5"
+yellow = "0xe0af68"
 
 [colors.normal]
-black   = "0x1e1e2e"
-red     = "0xf7768e"
-green   = "0x9ece6a"
-yellow  = "0xe0af68"
-blue    = "0x7aa2f7"
+black = "0x1e1e2e"
+blue = "0x7aa2f7"
+cyan = "0x7dcfff"
+green = "0x9ece6a"
 magenta = "0xbb9af7"
-cyan    = "0x7dcfff"
-white   = "0xc0caf5"
+red = "0xf7768e"
+white = "0xa9b1d6"
+yellow = "0xe0af68"
 
 [colors.primary]
 background = "0x1e1e2e"
 foreground = "0xc0caf5"
 
+[cursor]
+style = { shape = "Beam", blinking = "Always"}
+vi_mode_style = "None"
+thickness = 0.11
+
 [font]
-normal.family = "Hack Nerd Font"
-normal.style = "Regular"
-bold.family = "Hack Nerd Font"
-bold.style = "Bold"
-italic.family = "Hack Nerd Font"
-italic.style = "Italic"
-bold_italic.family = "Hack Nerd Font"
-bold_italic.style = "Bold Italic"
-size = 12
+size = 11.0
 
-[window]
-dynamic_title = true
-padding.x = 5
-padding.y = 5
-opacity = 0.95
+[font.bold]
+family = "Hack Nerd Font"
 
-[cursor.style]
-shape                 = "Beam"
-blinking              = "Always"
+[font.italic]
+family = "Hack Nerd Font"
 
-[cursor.vi_mode_style]
-shape                 = "Beam"
-blinking              = "Off"
+[font.normal]
+family = "Hack Nerd Font"
 
 [mouse]
 hide_when_typing = true
 
+[[mouse.bindings]]
+mouse = "Middle"
+action = "PasteSelection"
+
+[scrolling]
+history = 10000
+multiplier = 3
+
 [selection]
-semantic_escape_chars = ",│`|:\"' ()[]{}<>"
+semantic_escape_chars = ''',│`|:"' ()[]{}<>'''
 
 [terminal.shell]
 program = "/usr/bin/zsh"
-args = []
+args = [ ]
+
+[window]
+dynamic_title = true
+opacity = 0.97
+
+[window.padding]
+x = 2
+y = 2
