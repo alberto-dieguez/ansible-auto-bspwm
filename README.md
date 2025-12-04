@@ -98,6 +98,8 @@ sudo adduser user
 
 sudo usermod -aG sudo YOURUSER
 
+sudo usermod -aG vboxsf YOURUSER
+
 sudo cp -r /home/kali/* /home/YOURUSER/
 
 sudo chown -R YOURUSER:YOURUSER /home/YOURUSER
