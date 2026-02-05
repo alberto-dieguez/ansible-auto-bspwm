@@ -200,6 +200,8 @@ bindkey $terminfo[kRIT] shift-right
 
 bindkey "^[[1;3D" vi-backward-word # alt + left
 bindkey "^[[1;3C" vi-forward-word # alt + right 
+bindkey "^[[1;5D" vi-backward-word   # Ctrl + Left
+bindkey "^[[1;5C" vi-forward-word    # Ctrl + Right
 
 bindkey "^[[H" beginning-of-line
 bindkey "^[[F" end-of-line
