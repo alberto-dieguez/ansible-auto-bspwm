@@ -12,7 +12,7 @@
       msg: "Environment by @ch1od0, thx to @r1vs3c and @s4vitar."
 
   - name: Installing firejail...
-    became: true
+    become: true
     shell:
       cmd: git clone https://github.com/netblue30/firejail.git && cd firejail && ./configure && make && make install-strip
       chdir: "{{ dir }}"
@@ -173,8 +173,8 @@
       chdir: "{{ dir }}/tools/picom"
 
   - name: Installing Powerlevel10k for user {{ user }}...
+    become: false
     shell: 
-    became: false
       cmd: git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
       chdir: "{{ dir }}"
 
@@ -296,7 +296,7 @@
       executable: /bin/bash
 
   - name: Fix time zone...
-    became: true
+    become: true
     shell:
       cmd: timedatectl set-timezone Europe/Madrid
       chdir: "{{ dir }}"
