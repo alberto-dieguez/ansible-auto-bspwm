@@ -45,12 +45,14 @@
       state: present
 
   - name: Clone neofetch
+    become: true
     git:
       repo: "https://github.com/dylanaraps/neofetch.git"
       dest: "/opt/neofetch"
       version: master
 
   - name: Install neofetch script
+    become: true
     copy:
       src: "/opt/neofetch/neofetch"
       dest: "/usr/local/bin/neofetch"
@@ -153,21 +155,25 @@
       dest: "{{ dir }}/tools/picom"
 
   - name: Installing bspwm...
+    become: true
     shell: 
       cmd: make -j$(nproc) && sudo make install && sudo apt install bspwm -y
       chdir: "{{ dir }}/tools/bspwm"
 
   - name: Installing sxhkd...
+    become: true
     shell: 
       cmd: make -j$(nproc) && sudo make install
       chdir: "{{ dir }}/tools/sxhkd"
 
   - name: Installing polybar...
+    become: true
     shell: 
       cmd: mkdir build && cd build && cmake .. && make -j$(nproc) && sudo make install
       chdir: "{{ dir }}/tools/polybar"
 
   - name: Installing picom...
+    become: true
     shell: 
       cmd: git submodule update --init --recursive && meson --buildtype=release . build && ninja -C build && sudo ninja -C build install
       chdir: "{{ dir }}/tools/picom"
