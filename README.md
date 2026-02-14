@@ -128,4 +128,22 @@ groups $USER
 sudo apt install docker-compose
 
 
+# Fixes
+
+## Fix for the auto resize with ISO installation.
+
+```
+sudo apt install build-essential dkms linux-headers-$(uname -r)
+sudo mount /dev/cdrom /mnt
+cd /mnt
+sudo sh VBoxLinuxAdditions.run
+sudo umount /mnt
+sed -i 's|bspc {quit,wm -r}|xrandr -s 0 \&\& bspc {quit,wm -r}|' ~/.config/sxhkd/sxhkdrc
+sudo reboot
+```
+
+Now ctrl + super + r     resize the window
+
+
+
 
