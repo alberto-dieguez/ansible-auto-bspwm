@@ -185,6 +185,15 @@ function rmk(){
 function clearhistory(){
 	echo "" > ~/.zsh_history
 }
+
+function settarget() {
+	echo "$1 $2" > ~/.config/polybar/shapes/scripts/target
+}
+
+function cleartarget() {
+	> ~/.config/polybar/shapes/scripts/target
+}
+
 shift-arrow() {
     ((REGION_ACTIVE)) || zle set-mark-command
     zle $1
